@@ -1,0 +1,799 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+/* ── 顶部 Tab 导航 ─────────────────────────────────────────── */
+.tab-nav {
+  position: relative;
+  z-index: 10;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 1rem;
+  padding: 0 1rem;
+  height: 84px;
+  background: rgba(10, 8, 20, 0.5);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border-bottom: 1px solid rgba(226, 226, 240, 0.1);
+}
+
+/* 纯文字 Tab：选中加粗 + 底部金色矩形指示条紧贴底栏横线 */
+.tab-item {
+  position: relative;
+  background: none;
+  border: none;
+  padding: 0 0.75rem;
+  height: 100%;
+  color: #F9E4BD;
+  font-family: 'Noto Serif SC', serif;
+  font-size: 0.95rem;
+  font-weight: 400;
+  cursor: pointer;
+  transition: color 0.2s ease;
+  letter-spacing: 0.12em;
+  -webkit-tap-highlight-color: transparent;
+  display: flex;
+  align-items: center;
+}
+
+.tab-item:hover:not(.active) {
+  color: #F9E4BD;
+}
+
+.tab-item.active {
+  color: #F9E4BD;
+  font-weight: 700;
+}
+
+.tab-item.active::after {
+  content: '';
+  position: absolute;
+  left: 0.75rem;
+  right: 0.75rem;
+  bottom: -1px;
+  height: 3px;
+  background: #F9E4BD;
+}
+
+/* ── app-content 兼容塔罗牌高度 ──────────────────────────── */
+.app-content {
+  min-height: 60vh;
+}
+
+body {
+  font-family: 'Noto Serif SC', 'KangXiDict', 'STSong', 'SimSun', serif;
+  background: #0a0a12;
+  color: #F9E4BD;
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+
+.app-wrapper {
+  position: relative;
+  min-height: 100vh;
+}
+
+.app-content {
+  position: relative;
+  z-index: 1;
+  max-width: 560px;
+  margin: 0 auto;
+  padding: 2rem 1.25rem 4rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1.5rem;
+}
+
+/* 小六壬 / 塔罗 共用标题模块 */
+.page-module-header {
+  text-align: center;
+  padding: 2.5rem 0 1rem;
+  width: 100%;
+}
+
+.page-header-icon {
+  width: 3.25rem;
+  height: 3.25rem;
+  margin: 0 auto 0.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.page-header-icon svg {
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+
+.page-header-emoji {
+  font-size: 2.8rem;
+  line-height: 1;
+  display: block;
+}
+
+.page-module-title {
+  font-family: 'KangXiDict', 'STKaiti', 'KaiTi', serif;
+  font-size: 2.2rem;
+  font-weight: 700;
+  letter-spacing: 0.15em;
+  margin: 0 0 0.5rem;
+  background: linear-gradient(135deg, #F9E4BD 0%, #F9E4BD 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  color: transparent;
+  filter: drop-shadow(0 0 14px rgba(249, 228, 189, 0.35));
+}
+
+.app-subtitle {
+  font-family: 'Cormorant Garamond', 'Noto Serif SC', serif;
+  font-size: 0.95rem;
+  color: #F9E4BD;
+  font-style: italic;
+  letter-spacing: 0.2em;
+  margin: 0;
+}
+
+/* ── 六神总览 ── */
+.intro-card {
+  width: 100%;
+  max-width: 480px;
+  background: rgba(12, 10, 22, 0.7);
+  border: 1px solid rgba(226, 226, 240, 0.15);
+  border-radius: 16px;
+  padding: 1.4rem 1.4rem;
+  backdrop-filter: blur(8px);
+}
+
+.intro-title {
+  font-size: 0.82rem;
+  letter-spacing: 0.25em;
+  text-transform: uppercase;
+  color: #F9E4BD;
+  margin-bottom: 1rem;
+  text-align: center;
+}
+
+.hexagram-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 0.6rem;
+}
+
+.hexagram-mini {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.2rem;
+  padding: 0.6rem 0.4rem;
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid;
+  border-radius: 10px;
+  transition: background 0.3s;
+}
+
+.hexagram-mini:hover {
+  background: rgba(255, 255, 255, 0.07);
+}
+
+.hex-mini-name {
+  font-size: 1.1rem;
+  font-weight: 600;
+  letter-spacing: 0.05em;
+}
+
+.hex-mini-wx {
+  font-size: 0.72rem;
+  color: #978B74;
+}
+
+.hex-mini-pos {
+  font-size: 0.68rem;
+  color: #978B74;
+}
+
+/* ── 模式切换 + 「当前时间」下方展示条 ── */
+.mode-block {
+  width: 100%;
+  max-width: 400px;
+  display: flex;
+  flex-direction: column;
+  gap: 0.45rem;
+}
+
+.mode-selector {
+  display: flex;
+  gap: 0.5rem;
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(226, 226, 240, 0.2);
+  border-radius: 50px;
+  padding: 4px;
+  width: 100%;
+  max-width: 400px;
+}
+
+.mode-btn {
+  flex: 1;
+  padding: 0.55rem 0.5rem;
+  border: none;
+  border-radius: 50px;
+  background: transparent;
+  color: #F9E4BD;
+  font-family: 'Noto Serif SC', serif;
+  font-size: 0.88rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.mode-btn.active {
+  background: rgba(226, 226, 240, 0.15);
+  color: #F9E4BD;
+  box-shadow: 0 0 12px rgba(226, 226, 240, 0.2);
+}
+
+.mode-btn:hover:not(.active) {
+  color: #978B74;
+}
+
+.mode-time-display-bar {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  width: 100%;
+  max-width: 400px;
+  padding: 0.7rem 1rem;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(226, 226, 240, 0.25);
+  border-radius: 12px;
+  color: #F9E4BD;
+  font-family: 'Noto Serif SC', serif;
+  font-size: 0.95rem;
+  box-sizing: border-box;
+}
+
+.mode-time-display-text {
+  text-align: center;
+}
+
+.time-display-calendar-icon {
+  flex-shrink: 0;
+  width: 18px;
+  height: 18px;
+  color: #F9E4BD;
+  opacity: 0.92;
+}
+
+.random-hint {
+  font-size: 0.78rem;
+  color: #978B74;
+  text-align: center;
+  margin-top: -0.5rem;
+  letter-spacing: 0.02em;
+}
+
+/* ── 输入框 ── */
+.input-group {
+  display: flex;
+  gap: 0.6rem;
+  width: 100%;
+  max-width: 400px;
+}
+
+.time-input,
+.random-input {
+  flex: 1;
+  padding: 0.7rem 1rem;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(226, 226, 240, 0.25);
+  border-radius: 12px;
+  color: #F9E4BD;
+  font-family: 'Noto Serif SC', serif;
+  font-size: 0.95rem;
+  outline: none;
+  transition: border-color 0.3s;
+}
+
+.time-input:focus,
+.random-input:focus {
+  border-color: rgba(226, 226, 240, 0.6);
+  box-shadow: 0 0 10px rgba(226, 226, 240, 0.1);
+}
+
+.app-content-xiaoliuren .time-input,
+.app-content-xiaoliuren .random-input {
+  text-align: center;
+}
+
+.time-input::-webkit-calendar-picker-indicator {
+  filter: invert(0.8);
+  cursor: pointer;
+}
+
+/* ── 按钮 ── */
+.action-btn,
+.divine-btn {
+  padding: 0.7rem 1.4rem;
+  background: linear-gradient(135deg, rgba(139, 92, 246, 0.3) 0%, rgba(226, 226, 240, 0.3) 100%);
+  border: 1px solid rgba(226, 226, 240, 0.5);
+  border-radius: 50px;
+  color: #F9E4BD;
+  font-family: 'Noto Serif SC', serif;
+  font-size: 0.95rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  white-space: nowrap;
+}
+
+.action-btn:hover,
+.divine-btn:hover {
+  background: linear-gradient(135deg, rgba(139, 92, 246, 0.5) 0%, rgba(226, 226, 240, 0.5) 100%);
+  box-shadow: 0 0 20px rgba(226, 226, 240, 0.2);
+  transform: translateY(-1px);
+}
+
+.action-btn:active,
+.divine-btn:active {
+  transform: translateY(0);
+  box-shadow: 0 2px 8px rgba(226, 226, 240, 0.25);
+}
+
+/* ── 结果卡片 ── */
+.result-card-wrapper {
+  width: 100%;
+  max-width: 480px;
+  background: rgba(12, 10, 22, 0.82);
+  border: 1px solid rgba(226, 226, 240, 0.2);
+  border-radius: 20px;
+  padding: 2.5rem 2rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1.8rem;
+  box-shadow:
+    0 8px 40px rgba(0, 0, 0, 0.5),
+    inset 0 1px 0 rgba(255, 255, 255, 0.05);
+  backdrop-filter: blur(12px);
+  animation: fadeInUp 0.5s ease;
+}
+
+.fortune-display {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.8rem;
+}
+
+.fortune-tag {
+  font-size: 2.4rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  line-height: 1;
+}
+
+.fortune-sub {
+  font-size: 0.8rem;
+  color: #978B74;
+  letter-spacing: 0.1em;
+}
+
+.hexagram-label {
+  font-size: 1.6rem;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  padding: 0.25rem 1.2rem;
+  border: 1.5px solid;
+  border-radius: 50px;
+  background: rgba(255, 255, 255, 0.04);
+}
+
+.result-divider {
+  width: 60%;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(226, 226, 240, 0.3), transparent);
+}
+
+.process-section,
+.result-section,
+.poem-section {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 0.7rem;
+}
+
+.section-title {
+  font-size: 0.78rem;
+  font-weight: 600;
+  letter-spacing: 0.25em;
+  text-transform: uppercase;
+  color: #F9E4BD;
+  padding-bottom: 0.4rem;
+  border-bottom: 1px solid rgba(226, 226, 240, 0.1);
+}
+
+/* 小六壬页（除常见问题）：结果区内标题与正文居中 */
+.result-card-wrapper .section-title {
+  text-align: center;
+}
+
+.result-card-wrapper .process-chain,
+.result-card-wrapper .result-keyword,
+.result-card-wrapper .result-desc,
+.result-card-wrapper .poem-text {
+  text-align: center;
+}
+
+.result-card-wrapper .poem-text {
+  border-left: none;
+}
+
+/* 断语/诗诀：按句号分割行 */
+.result-desc-period,
+.result-poem {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.2rem;
+}
+
+.result-poem-line {
+  display: block;
+  text-align: center;
+  width: 100%;
+}
+
+/* ── 给你的建议 ── */
+.advice-section {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 0.7rem;
+}
+
+.advice-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+  padding: 0.6rem 0;
+}
+
+.advice-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.5rem;
+  font-size: 0.88rem;
+  color: #978B74;
+  line-height: 1.8;
+  text-align: left;
+}
+
+.advice-dot {
+  font-size: 1.2rem;
+  line-height: 1.6;
+  flex-shrink: 0;
+  font-weight: 700;
+}
+
+.advice-text {
+  flex: 1;
+}
+
+/* 小六壬结果区内建议模块居中标题 */
+.result-card-wrapper .advice-section .section-title {
+  text-align: center;
+}
+
+.result-card-wrapper .advice-list {
+  align-items: center;
+}
+
+.result-card-wrapper .advice-item {
+  text-align: center;
+  justify-content: center;
+}
+
+.result-card-wrapper .advice-item .advice-text {
+  text-align: center;
+}
+
+.process-chain {
+  font-size: 0.92rem;
+  color: #978B74;
+  line-height: 1.8;
+  word-break: break-all;
+}
+
+.process-chain strong {
+  font-size: 1rem;
+}
+
+.result-keyword {
+  font-size: 1.05rem;
+  font-weight: 600;
+  letter-spacing: 0.05em;
+}
+
+.result-desc {
+  font-size: 0.9rem;
+  color: #978B74;
+  line-height: 1.8;
+  text-align: center;
+}
+
+.poem-text {
+  font-size: 0.85rem;
+  color: #F9E4BD;
+  line-height: 1.9;
+  font-style: italic;
+  padding: 0.6rem 0.8rem;
+  background: rgba(255, 255, 255, 0.02);
+  border-radius: 8px;
+  border-left: 2px solid rgba(226, 226, 240, 0.2);
+}
+
+.card-btn {
+  width: 100%;
+  max-width: 320px;
+  padding: 0.85rem 1.4rem;
+  font-size: 1rem;
+  border-radius: 14px;
+  text-align: center;
+}
+
+/* ── 掌诀图 ── */
+.palm-diagram {
+  width: 100%;
+  background: rgba(255, 255, 255, 0.025);
+  border: 1px solid rgba(226, 226, 240, 0.1);
+  border-radius: 14px;
+  padding: 1.2rem 1rem;
+}
+
+.palm-title {
+  font-size: 0.75rem;
+  letter-spacing: 0.25em;
+  text-transform: uppercase;
+  color: #978B74;
+  text-align: center;
+  margin-bottom: 0.9rem;
+}
+
+.palm-fingers {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 0.5rem;
+}
+
+.palm-finger {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.2rem;
+  padding: 0.55rem 0.3rem;
+  background: rgba(255, 255, 255, 0.025);
+  border-radius: 8px;
+  transition: all 0.3s;
+}
+
+.palm-finger.active {
+  background: rgba(var(--active-color-r, 212), var(--active-color-g, 175), var(--active-color-b, 55), 0.1);
+  box-shadow: 0 0 12px rgba(226, 226, 240, 0.15);
+}
+
+.finger-name {
+  font-size: 0.68rem;
+  color: #978B74;
+}
+
+.finger-section {
+  font-size: 0.75rem;
+}
+
+.finger-hex {
+  font-size: 1.05rem;
+  font-weight: 500;
+}
+
+/* ── 历史记录 ── */
+.history-panel {
+  width: 100%;
+  max-width: 480px;
+  background: rgba(12, 10, 22, 0.6);
+  border: 1px solid rgba(226, 226, 240, 0.12);
+  border-radius: 16px;
+  padding: 1.5rem 1.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.9rem;
+}
+
+.history-panel-title {
+  font-size: 0.78rem;
+  font-weight: 600;
+  letter-spacing: 0.25em;
+  text-transform: uppercase;
+  color: #F9E4BD;
+  text-align: center;
+  margin-bottom: 0.1rem;
+}
+
+.history-item {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.6rem;
+  font-size: 0.88rem;
+  padding-bottom: 0.7rem;
+  border-bottom: 1px solid rgba(226, 226, 240, 0.07);
+  flex-wrap: nowrap;
+}
+
+.history-item:last-child {
+  border-bottom: none;
+  padding-bottom: 0;
+}
+
+.history-item-name {
+  flex-shrink: 0;
+}
+
+.history-item-right {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  flex-shrink: 0;
+  margin-left: auto;
+}
+
+.history-fortune {
+  font-weight: 600;
+  font-size: 0.82rem;
+}
+
+.history-time {
+  font-size: 0.78rem;
+  color: #978B74;
+}
+
+/* ── FAQ 折叠 ── */
+.faq-wrapper {
+  width: 100%;
+  max-width: 480px;
+  background: rgba(12, 10, 22, 0.7);
+  border: 1px solid rgba(226, 226, 240, 0.15);
+  border-radius: 16px;
+  overflow: hidden;
+  backdrop-filter: blur(8px);
+}
+
+.faq-header {
+  padding: 1.2rem 1.5rem;
+  border-bottom: 1px solid rgba(226, 226, 240, 0.1);
+}
+
+.faq-title {
+  font-size: 0.82rem;
+  letter-spacing: 0.25em;
+  text-transform: uppercase;
+  color: #F9E4BD;
+}
+
+.faq-list {
+  display: flex;
+  flex-direction: column;
+}
+
+.faq-item {
+  border-bottom: 1px solid rgba(226, 226, 240, 0.07);
+}
+
+.faq-item:last-child {
+  border-bottom: none;
+}
+
+.faq-question {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 1rem 1.5rem;
+  background: none;
+  border: none;
+  color: #978B74;
+  font-family: 'Noto Serif SC', serif;
+  font-size: 0.9rem;
+  text-align: left;
+  cursor: pointer;
+  transition: all 0.3s;
+}
+
+.faq-question:hover {
+  background: rgba(226, 226, 240, 0.05);
+  color: #F9E4BD;
+}
+
+.faq-item.open .faq-question {
+  color: #F9E4BD;
+  background: rgba(226, 226, 240, 0.06);
+}
+
+.faq-arrow {
+  font-size: 1.1rem;
+  color: #F9E4BD;
+  flex-shrink: 0;
+  transition: transform 0.3s;
+}
+
+.faq-answer {
+  padding: 0 1.5rem 1.1rem;
+  font-size: 0.85rem;
+  color: #F9E4BD;
+  line-height: 1.8;
+}
+
+.page-bottom-disclaimer {
+  text-align: center;
+  font-size: 0.75rem;
+  color: #978B74;
+  padding: 1rem 1.5rem 0;
+  margin-top: 0.25rem;
+  letter-spacing: 0.1em;
+  width: 100%;
+  max-width: 480px;
+}
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@media (max-width: 480px) {
+  .app-content {
+    padding: 1.5rem 1rem 3rem;
+  }
+
+  .page-module-title {
+    font-size: 1.8rem;
+  }
+
+  .page-header-icon {
+    width: 2.85rem;
+    height: 2.85rem;
+  }
+
+  .result-card-wrapper {
+    padding: 2rem 1.25rem;
+    gap: 1.5rem;
+  }
+
+  .fortune-tag {
+    font-size: 2rem;
+  }
+
+  .hexagram-label {
+    font-size: 1.35rem;
+  }
+
+  .hexagram-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .palm-fingers {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
